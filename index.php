@@ -28,6 +28,8 @@ if ($_POST) {
     }
 }
 
+
+
 ?>
 
 <!doctype html>
@@ -37,9 +39,19 @@ if ($_POST) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Inclure CSS perso -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Inclure Boostrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    <!-- Inclure Boostrap ICO?S -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet">
+
+  
+
+
 </head>
 
 <body>
@@ -121,11 +133,6 @@ if ($_POST) {
     </div>
 
 
-
-
-
-
-
     <!-- HISTORY -->
 
     <div class="container col-xl-6 col-sm-10">
@@ -139,26 +146,58 @@ if ($_POST) {
             <div class="col">edit</div>
         </div>
 
-        <?php
-        foreach ($result as $row) {
-            echo "<div class='row mb-2'>";
-            echo "<div class='col'>" . $row['id'] . "</div>";
-            echo "<div class='col'>" . $row['date'] . "</div>";
-            echo "<div class='col'>" . $row['floor'] . "F</div>";
-            echo "<div class='col'>" . $row['position'] . "</div>";
-            echo "<div class='col'>$" . $row['price'] . "</div>";
-            echo "<div class='col d-flex'>";
-            echo "<button class='btn btn-primary btn-sm me-2'><i class='bi bi-pencil'></i></button>";
-            echo "<button class='btn btn-danger btn-sm'><i class='bi bi-trash'></i></button>";
-            echo "</div>";
-            echo "</div>";
-        }
-        ?>
+        <?php foreach ($result as $row) : ?>
+            <div class="row mb-2">
+                <div class="col"><?= $row['id'] ?></div>
+                <div class="col"><?= $row['date'] ?></div>
+                <div class="col"><?= $row['floor'] ?>F</div>
+                <div class="col"><?= $row['position'] ?></div>
+                <div class="col">$<?= $row['price'] ?></div>
+                <div class="col d-flex">
+                    <button class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button>
+
+                    <button class="btn btn-danger btn-sm">
+                        <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>"><i class="bi bi-trash"></i></a>
+                    </button>
+
+                </div>
+            </div>
+        <?php endforeach; ?>
 
     </div>
 
+    <!-- END HISTORY -->
+
+    <!-- DELETE MODAL -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirm delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete the bulb id n°<span id="deleteBulbId"></span>? <!-- Demande de confirmation pour supprimer l'ampoule avec l'ID correspondant -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <!-- Bouton d'annulation -->
+                <a id="deleteLink" href="#" class="btn btn-danger">Delete</a> <!-- Bouton de suppression avec un lien vers la suppression -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END DELETE MODAL -->
+
+
+
+    <!-- Inclure Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Inclure Bootstrap 5.3.0 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
     <script src="script.js"></script>
+    
 </body>
 
 </html>
