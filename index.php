@@ -8,7 +8,10 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 if ($_POST) {
-    if (isset($_POST["date"]) && (isset($_POST["floor"])) && (isset($_POST["position"])) && (isset($_POST["price"]))) {
+    if (isset($_POST["date"]) && 
+    (isset($_POST["floor"])) && 
+    (isset($_POST["position"])) && 
+    (isset($_POST["price"]))) {
         require_once("connect.php");
         $date = strip_tags($_POST["date"]);
         $floor = strip_tags($_POST["floor"]);
@@ -154,11 +157,17 @@ if ($_POST) {
                 <div class="col"><?= $row['position'] ?></div>
                 <div class="col">$<?= $row['price'] ?></div>
                 <div class="col d-flex">
-                    <button class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button>
 
+                <a href="edit.php?id=<?= $row["id"] ?>"><button class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button></a>
+                    
+
+
+
+                    <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>">
                     <button class="btn btn-danger btn-sm">
-                        <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>"><i class="bi bi-trash"></i></a>
+                        <i class="bi bi-trash"></i>
                     </button>
+                    </a>
 
                 </div>
             </div>
