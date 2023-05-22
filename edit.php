@@ -59,7 +59,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Edit Bulb</title>
 
     <!-- Inclure CSS perso -->
     <link rel="stylesheet" href="style.css">
@@ -75,7 +75,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 <body>
 
     <div class="container col-xl-6 col-sm-10">
-        <h2>Add a bulb ?</h2>
+        <h2>Edit bulb id: <?= $result["id"] ?> ?</h2>
         <form method="post">
             <div class="row">
                 <div class="mb-3">
@@ -108,7 +108,8 @@ L'étiquette affichée pour cette option est "1st Floor".-->
                 <div class="col-12 mb-3">
                     <label class="form-label">Select a position :</label>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="north" value="north" <?php if ($result["position"] == "north") echo 'checked'; ?> required>
+                        <input class="form-check-input" type="radio" name="position" id="north" value="north" 
+                        <?php if ($result["position"] == "north") echo 'checked'; ?> required>
 
                         <!-- L'élément <input> ci-dessus est un bouton radio avec l'ID "north" et la valeur "north".
 Si la valeur de la clé 'position' dans le tableau $result est égale à "north",
@@ -119,15 +120,18 @@ L'attribut 'required' spécifie que la sélection d'une position est obligatoire
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="east" value="east" <?php if ($result["position"] == "east") echo 'checked'; ?>>
+                        <input class="form-check-input" type="radio" name="position" id="east" value="east" 
+                        <?php if ($result["position"] == "east") echo 'checked'; ?>>
                         <label class="form-check-label" for="east">East</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="south" value="south" <?php if ($result["position"] == "south") echo 'checked'; ?>>
+                        <input class="form-check-input" type="radio" name="position" id="south" value="south" 
+                        <?php if ($result["position"] == "south") echo 'checked'; ?>>
                         <label class="form-check-label" for="south">South</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="west" value="west" <?php if ($result["position"] == "west") echo 'checked'; ?>>
+                        <input class="form-check-input" type="radio" name="position" id="west" value="west" 
+                        <?php if ($result["position"] == "west") echo 'checked'; ?>>
                         <label class="form-check-label" for="west">West</label>
                     </div>
                 </div>
