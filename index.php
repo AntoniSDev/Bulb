@@ -2,9 +2,9 @@
 
 session_start();
 
-if(!isset($_SESSION["user"])){
-  header("Location: login.php");  
-  exit; 
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
 };
 
 require_once("connect.php");
@@ -40,6 +40,8 @@ if ($_POST) {
     }
 }
 
+
+
 ?>
 
 <!doctype html>
@@ -59,7 +61,7 @@ if ($_POST) {
     <!-- Inclure Boostrap ICONS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet">
 
-    
+
 
 </head>
 
@@ -67,17 +69,17 @@ if ($_POST) {
     <header>
         <nav class="d-flex justify-content-center">
             </div>
-            <h1>Super BULBMAN</h1>           
-         
-            <?php if(!isset($_SESSION["user"])): ?>
-              <li><a href="login.php">login</a></li>     
-             <li><a href="register.php">register</a></li>  
-              <?php else: ?>
-            <li>Bonjour <?= $_SESSION["user"]["nick"]?></li>
-               <li><a href="disconnect.php">disconnect</a></li>  
-           <?php endif; ?>
-            
-            
+            <h1>Super BULBMAN</h1>
+
+            <?php if (!isset($_SESSION["user"])) : ?>
+                <li><a href="login.php">login</a></li>
+                <li><a href="register.php">register</a></li>
+            <?php else : ?>
+                <li>wHELLcome <?= $_SESSION["user"]["nick"] ?></li>
+                <li><a href="disconnect.php">disconnect</a></li>
+            <?php endif; ?>
+
+
         </nav>
     </header>
 
@@ -189,6 +191,7 @@ if ($_POST) {
 
 
     <!-- DELETE MODAL -->
+
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -208,23 +211,37 @@ if ($_POST) {
     </div>
     <!-- END DELETE MODAL -->
 
-    
-<!-- DELETE TOAST -->
-
-<!-- END DELETE TOAST -->
 
 
 
-<!-- Inclure Jquery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Inclure Bootstrap 5.3.0 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 
+    <!-- DELETE TOAST -->
+    <?php if (isset($_SESSION['bulb_delete']) && $_SESSION['bulb_delete'] === true) : ?>
+
+        <div class="toast position-fixed top-0 end-0 align-items-center text-white bg-success border-0 fs-4" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Bulb id n°<?= $_SESSION['bulb_delete_id'] ?> has been deleted successfully.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <?php unset($_SESSION['bulb_delete'], $_SESSION['bulb_delete_id']); ?>
+    <?php endif; ?>
+    <!-- END DELETE TOAST -->
+
+
+
+
+    <!-- Inclure Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Inclure Bootstrap 5.3.0 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 
     <script src="script.js"></script>
-
-   
 </body>
 
 </html>

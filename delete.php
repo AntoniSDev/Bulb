@@ -29,14 +29,32 @@ if (isset($_GET['id']) && !empty($_GET['id'])){
     $query->execute();
     require_once('close.php');
 
-    // faire un session start - nommer 
-    //
-    header('Location: index.php');
-    
 
+
+// session delete
+session_start();
+$_SESSION['bulb_delete'] = true;
+// $id of deleted bulb
+$_SESSION['bulb_delete_id'] = $id; 
+
+
+header('Location: index.php');
+
+
+
+
+    
     }else{
 
         header('Location: index.php');
 }
+
+
+// delete.php
+
+// Code pour supprimer un élément...
+
+
+
 
 ?>
