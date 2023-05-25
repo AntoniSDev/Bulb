@@ -1,5 +1,12 @@
 <?php
 
+session_start();
+
+if(!isset($_SESSION["user"])){
+  header("Location: login.php");  
+  exit; 
+};
+
 require_once("connect.php");
 $sql = "SELECT * FROM bulb";
 $query = $db->prepare($sql);
@@ -8,10 +15,12 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 if ($_POST) {
-    if (isset($_POST["date"]) && 
-    (isset($_POST["floor"])) && 
-    (isset($_POST["position"])) && 
-    (isset($_POST["price"]))) {
+    if (
+        isset($_POST["date"]) &&
+        (isset($_POST["floor"])) &&
+        (isset($_POST["position"])) &&
+        (isset($_POST["price"]))
+    ) {
         require_once("connect.php");
         $date = strip_tags($_POST["date"]);
         $floor = strip_tags($_POST["floor"]);
@@ -26,12 +35,10 @@ if ($_POST) {
         $query->bindvalue(":price", $price, PDO::PARAM_STR);
 
         $query->execute();
-        require_once("close.php");
-        header("Location: index.php");
+        require_once('close.php');
+        header('Location: index.php');
     }
 }
-
-
 
 ?>
 
@@ -41,7 +48,7 @@ if ($_POST) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Super BULBMAN</title>
 
     <!-- Inclure CSS perso -->
     <link rel="stylesheet" href="style.css">
@@ -49,11 +56,10 @@ if ($_POST) {
     <!-- Inclure Boostrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 
-    <!-- Inclure Boostrap ICO?S -->
+    <!-- Inclure Boostrap ICONS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet">
 
-  
-
+    
 
 </head>
 
@@ -61,14 +67,19 @@ if ($_POST) {
     <header>
         <nav class="d-flex justify-content-center">
             </div>
-            <h1>BULBMAN</h1>
-            <button class="">Logout</button>
+            <h1>Super BULBMAN</h1>           
+         
+            <?php if(!isset($_SESSION["user"])): ?>
+              <li><a href="login.php">login</a></li>     
+             <li><a href="register.php">register</a></li>  
+              <?php else: ?>
+            <li>Bonjour <?= $_SESSION["user"]["nick"]?></li>
+               <li><a href="disconnect.php">disconnect</a></li>  
+           <?php endif; ?>
+            
+            
         </nav>
     </header>
-
-    <div class="container d-flex justify-content-center">
-        <a href="add.php"><button>Add a bulb</button></a>
-    </div>
 
     <!-- ADD -->
 
@@ -128,8 +139,8 @@ if ($_POST) {
                 </div>
             </div>
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary m-5">Add a bulb</button>
+            <div class="container d-flex justify-content-center">
+                <a href="add.php"><button>Add a bulb</button></a>
             </div>
 
         </form>
@@ -158,15 +169,12 @@ if ($_POST) {
                 <div class="col">$<?= $row['price'] ?></div>
                 <div class="col d-flex">
 
-                <a href="edit.php?id=<?= $row["id"] ?>"><button class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button></a>
-                    
-
-
+                    <a href="edit.php?id=<?= $row["id"] ?>"><button class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button></a>
 
                     <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>">
-                    <button class="btn btn-danger btn-sm">
-                        <i class="bi bi-trash"></i>
-                    </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </a>
 
                 </div>
@@ -177,36 +185,46 @@ if ($_POST) {
 
     <!-- END HISTORY -->
 
+
+
+
     <!-- DELETE MODAL -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmationModalLabel">Confirm delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure to delete the bulb id n°<span id="deleteBulbId"></span>? <!-- Demande de confirmation pour supprimer l'ampoule avec l'ID correspondant -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <!-- Bouton d'annulation -->
-                <a id="deleteLink" href="#" class="btn btn-danger">Delete</a> <!-- Bouton de suppression avec un lien vers la suppression -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirm delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure to delete the bulb id n°<span id="deleteBulbId"></span>? <!-- Demande de confirmation pour supprimer l'ampoule avec l'ID correspondant -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> <!-- Bouton d'annulation -->
+                    <a id="deleteLink" href="#" class="btn btn-danger">Delete</a> <!-- Bouton de suppression avec un lien vers la suppression -->
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- END DELETE MODAL -->
+    <!-- END DELETE MODAL -->
+
+    
+<!-- DELETE TOAST -->
+
+<!-- END DELETE TOAST -->
 
 
 
-    <!-- Inclure Jquery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Inclure Jquery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Inclure Bootstrap 5.3.0 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<!-- Inclure Bootstrap 5.3.0 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
 
     <script src="script.js"></script>
-    
+
+   
 </body>
 
 </html>

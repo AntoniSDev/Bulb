@@ -108,8 +108,7 @@ L'étiquette affichée pour cette option est "1st Floor".-->
                 <div class="col-12 mb-3">
                     <label class="form-label">Select a position :</label>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="north" value="north" 
-                        <?php if ($result["position"] == "north") echo 'checked'; ?> required>
+                        <input class="form-check-input" type="radio" name="position" id="north" value="north" <?php if ($result["position"] == "north") echo 'checked'; ?> required>
 
                         <!-- L'élément <input> ci-dessus est un bouton radio avec l'ID "north" et la valeur "north".
 Si la valeur de la clé 'position' dans le tableau $result est égale à "north",
@@ -120,18 +119,15 @@ L'attribut 'required' spécifie que la sélection d'une position est obligatoire
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="east" value="east" 
-                        <?php if ($result["position"] == "east") echo 'checked'; ?>>
+                        <input class="form-check-input" type="radio" name="position" id="east" value="east" <?php if ($result["position"] == "east") echo 'checked'; ?>>
                         <label class="form-check-label" for="east">East</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="south" value="south" 
-                        <?php if ($result["position"] == "south") echo 'checked'; ?>>
+                        <input class="form-check-input" type="radio" name="position" id="south" value="south" <?php if ($result["position"] == "south") echo 'checked'; ?>>
                         <label class="form-check-label" for="south">South</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="position" id="west" value="west" 
-                        <?php if ($result["position"] == "west") echo 'checked'; ?>>
+                        <input class="form-check-input" type="radio" name="position" id="west" value="west" <?php if ($result["position"] == "west") echo 'checked'; ?>>
                         <label class="form-check-label" for="west">West</label>
                     </div>
                 </div>
@@ -153,6 +149,21 @@ L'attribut 'required' spécifie que la sélection d'une position est obligatoire
         </form>
     </div>
 
+    <!-- DELETE TOAST CONFIRM -->
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Bulb n° <?= $result["id"] ?> deleted successfully.
+        </div>
+    </div>
+    <!-- END DELETE TOAST CONFIRM -->
+
+
+
+    <!-- Inclure Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Inclure Bootstrap 5.3.0 JS -->

@@ -28,6 +28,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])){
     $query->bindValue(':id', $id, PDO::PARAM_INT);
     $query->execute();
     require_once('close.php');
+
+    // faire un session start - nommer 
+    //
     header('Location: index.php');
     
 
