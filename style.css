@@ -12,3 +12,18 @@
     color: white;
 }
 
+
+
+     /* Styles pour les boutons de pagination */
+     .page-link {
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .page-link:hover {
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    .page-item.disabled .page-link {
+        opacity: 0.5;
+    }

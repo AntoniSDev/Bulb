@@ -7,11 +7,62 @@ if (!isset($_SESSION["user"])) {
     exit;
 };
 
-require_once("connect.php");
-$sql = "SELECT * FROM bulb";
+// PAGINATION
+
+// On détermine sur quelle page on se trouve
+if (isset($_GET['page']) && !empty($_GET['page'])) {
+    $currentPage = (int) strip_tags($_GET['page']);
+} else {
+    $currentPage = 1;
+}
+// On se connecte à là base de données
+require_once('connect.php');
+
+// On détermine le nombre total d'articles
+$sql = 'SELECT COUNT(*) AS nb_articles FROM `bulb`;';
+
+// On prépare la requête
 $query = $db->prepare($sql);
+
+// On exécute
 $query->execute();
-$result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+// On récupère le nombre d'articles
+$result = $query->fetch();
+
+$nbArticles = (int) $result['nb_articles'];
+
+// On détermine le nombre d'articles par page
+$parPage = 5;
+
+// On calcule le nombre de pages total
+$pages = ceil($nbArticles / $parPage);
+
+// Calcul du 1er article de la page
+$premier = ($currentPage * $parPage) - $parPage;
+
+$sql = 'SELECT * FROM `bulb` ORDER BY `date` DESC LIMIT :premier, :parpage;';
+
+// On prépare la requête
+$query = $db->prepare($sql);
+
+$query->bindValue(':premier', $premier, PDO::PARAM_INT);
+$query->bindValue(':parpage', $parPage, PDO::PARAM_INT);
+
+// On exécute
+$query->execute();
+
+// On récupère les valeurs dans un tableau associatif
+$articles = $query->fetchAll(PDO::FETCH_ASSOC);
+
+
+// END PAGINATION
+
+//require_once("connect.php");
+//$sql = "SELECT * FROM bulb";
+//$query = $db->prepare($sql);
+//$query->execute();
+//$result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 if ($_POST) {
@@ -67,37 +118,48 @@ if ($_POST) {
 
 <body>
     <header>
-        <nav class="d-flex justify-content-center">
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container-fluid d-flex justify-content-center">
+                <a class="navbar-brand" href="#">Super BULBMAN</a>
             </div>
-            <h1>Super BULBMAN</h1>
-
-            <?php if (!isset($_SESSION["user"])) : ?>
-                <li><a href="login.php">login</a></li>
-                <li><a href="register.php">register</a></li>
-            <?php else : ?>
-                <li>wHELLcome <?= $_SESSION["user"]["nick"] ?></li>
-                <li><a href="disconnect.php">disconnect</a></li>
-            <?php endif; ?>
-
-
+            <div class="container-fluid">
+                <ul class="nav justify-content-center">
+                    <?php if (!isset($_SESSION["user"])) : ?>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-secondary" href="login.php">login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-secondary" href="register.php">register</a>
+                        </li>
+                    <?php else : ?>
+                        <li class="nav-item">
+                            <span class="nav-link" style="color: white;">wHELLcome <?= $_SESSION["user"]["nick"] ?></span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-secondary" href="disconnect.php" style="color: white;">disconnect</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
         </nav>
     </header>
 
-    <!-- ADD -->
 
-    <div class="container col-xl-6 col-sm-10">
+
+    <!-- ADD -->
+    <div class="container col-xl-6 col-sm-10 bg-secondary text-white mt-4 p-4 rounded-3">
         <h2>Add a bulb ?</h2>
         <form method="post">
-            <div class="row">
-                <div class="mb-3">
+            <div class="row mb-3">
+                <div class="col-md-6">
                     <label for="date" class="form-label">Date :</label>
-                    <div class="input-group">
-                        <input type="date" class="form-control" id="date" name="date" required>
+                    <div class="input-group-prepend">
+                        <input type="date" class="form-control form-control-lg" id="date" name="date" required>
                     </div>
                 </div>
-                <div class="mb-3">
+                <div class="col-md-6">
                     <label for="floor" class="form-label">Floor :</label>
-                    <select class="form-select" id="floor" name="floor" required>
+                    <select class="form-select form-select-lg" id="floor" name="floor" required>
                         <option value="">Select floor</option>
                         <option value="1">1st Floor</option>
                         <option value="2">2nd Floor</option>
@@ -111,42 +173,74 @@ if ($_POST) {
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label">Select a position :</label>
-                    <div class="form-check form-check-inline">
+            <div class="row mb-3 text-center">
+                <div class="col-12">
+                    <label class="form-label">Position :</label>
+                    <div class="form-check form-check-inline form-check-lg">
                         <input class="form-check-input" type="radio" name="position" id="north" value="north" required>
                         <label class="form-check-label" for="north">North</label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div class="form-check form-check-inline form-check-lg">
                         <input class="form-check-input" type="radio" name="position" id="east" value="east">
                         <label class="form-check-label" for="east">East</label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div class="form-check form-check-inline form-check-lg">
                         <input class="form-check-input" type="radio" name="position" id="south" value="south">
                         <label class="form-check-label" for="south">South</label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div class="form-check form-check-inline form-check-lg">
                         <input class="form-check-input" type="radio" name="position" id="west" value="west">
                         <label class="form-check-label" for="west">West</label>
                     </div>
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 text-center">
                 <label for="price" class="form-label">Price:</label>
-                <div class="input-group">
+                <div class="input-group justify-content-center">
                     <span class="input-group-text">$</span>
-                    <input type="text" class="form-control" id="price" name="price" required placeholder="Enter price">
+                    <input type="text" class="form-control" id="price" name="price" required placeholder="Enter price" style="max-width: 200px;">
                 </div>
             </div>
 
             <div class="container d-flex justify-content-center">
-                <a href="add.php"><button>Add a bulb</button></a>
+                <a href="add.php"><button class="btn btn-primary btn-lg">Add a bulb</button></a>
             </div>
 
         </form>
     </div>
+
+
+    <!-- PAGINATION -->
+
+    <div class="container d-flex justify-content-center mt-5">
+        <nav>
+            <ul class="pagination">
+                <!-- Lien vers la page précédente (désactivé si on se trouve sur la 1ère page) -->
+                <li class="page-item <?= ($currentPage == 1) ? "disabled" : "" ?>">
+                    <a href="./?page=<?= $currentPage - 1 ?>" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                </li>
+                <?php for ($page = 1; $page <= $pages; $page++) : ?>
+                    <!-- Lien vers chacune des pages (activé si on se trouve sur la page correspondante) -->
+                    <li class="page-item <?= ($currentPage == $page) ? "active" : "" ?>">
+                        <a href="./?page=<?= $page ?>" class="page-link"><?= $page ?></a>
+                    </li>
+                <?php endfor ?>
+                <!-- Lien vers la page suivante (désactivé si on se trouve sur la dernière page) -->
+                <li class="page-item <?= ($currentPage == $pages) ? "disabled" : "" ?>">
+                    <a href="./?page=<?= $currentPage + 1 ?>" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- END PAGINATION -->
 
 
     <!-- HISTORY -->
@@ -162,30 +256,30 @@ if ($_POST) {
             <div class="col">edit</div>
         </div>
 
-        <?php foreach ($result as $row) : ?>
+        <?php foreach ($articles as $row) : ?>
             <div class="row mb-2">
                 <div class="col"><?= $row['id'] ?></div>
                 <div class="col"><?= $row['date'] ?></div>
                 <div class="col"><?= $row['floor'] ?>F</div>
                 <div class="col"><?= $row['position'] ?></div>
                 <div class="col">$<?= $row['price'] ?></div>
-                <div class="col d-flex">
-
-                    <a href="edit.php?id=<?= $row["id"] ?>"><button class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></button></a>
-
-                    <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>">
-                        <button class="btn btn-danger btn-sm">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </a>
-
+                <div class="col">
+                    <div class="d-flex">
+                        <a href="edit.php?id=<?= $row["id"] ?>" class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></a>
+                        <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>">
+                            <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                        </a>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
-
     </div>
 
     <!-- END HISTORY -->
+
+
+
+
 
 
 
