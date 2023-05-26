@@ -1,66 +1,63 @@
 <?php
-  //opening php session
-  session_start();
- 
-if(isset($_SESSION["user"])){
-    header("Location: index.php");  
-    exit; 
+//opening php session
+session_start();
+
+if (isset($_SESSION["user"])) {
+    header("Location: index.php");
+    exit;
 };
 
 //checking if form is sent
-if(!empty($_POST)){
+if (!empty($_POST)) {
     //form is sent
     //checking all fields not empty
-    if(isset($_POST["email"], $_POST["pass"])
-    && !empty($_POST["email"]
-    && !empty($_POST["pass"]))
-    ){
-      //checking email is real email
-      if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)){
-        die("This is not a mail");
-      }
+    if (
+        isset($_POST["email"], $_POST["pass"])
+        && !empty($_POST["email"]
+            && !empty($_POST["pass"]))
+    ) {
+        //checking email is real email
+        if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+            die("This is not a mail");
+        }
 
-      //connect db
-      require_once "connect.php";
+        //connect db
+        require_once "connect.php";
 
-      $sql = "SELECT * FROM users WHERE email = :email";
+        $sql = "SELECT * FROM users WHERE email = :email";
 
-      $query = $db->prepare($sql);
+        $query = $db->prepare($sql);
 
-      $query->bindValue(":email", $_POST["email"], PDO::PARAM_STR);
+        $query->bindValue(":email", $_POST["email"], PDO::PARAM_STR);
 
-      $query->execute();
+        $query->execute();
 
-      $user = $query->fetch();
+        $user = $query->fetch();
 
-      if(!$user){
-        die("User/Password wrong");
-      }
+        if (!$user) {
+            die("User/Password wrong");
+        }
 
-      // user exists , checking password
+        // user exists , checking password
 
-      if(!password_verify($_POST["pass"], $user["pass"])){
-        die("User/Password wrong");
-      }
+        if (!password_verify($_POST["pass"], $user["pass"])) {
+            die("User/Password wrong");
+        }
 
-      //user and password ok
-      //connecting user 
-
-
-
-      //inject user info in $_SESSION
-      $_SESSION["user"] = [
-        "id" => $user["id"],
-        "nick" => $user["username"],
-        "email" => $user["email"]
-      ];
-
-      //redirect on userpage
-      header("Location: index.php");
+        //user and password ok
+        //connecting user 
 
 
 
+        //inject user info in $_SESSION
+        $_SESSION["user"] = [
+            "id" => $user["id"],
+            "nick" => $user["username"],
+            "email" => $user["email"]
+        ];
 
+        //redirect on userpage
+        header("Location: index.php");
     }
 }
 
@@ -88,25 +85,42 @@ if(!empty($_POST)){
     <!-- Inclure Boostrap ICONS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet">
 
-    
+
 
 </head>
 
+<header>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid d-flex justify-content-center">
+            <a class="navbar-brand" href="#">Super BULBMAN</a>
+        </div>
+        <div class="container-fluid">
+            <ul class="nav justify-content-center">
+                <?php if (!isset($_SESSION["user"])) : ?>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary" href="login.php">login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary" href="register.php">register</a>
+                    </li>
+                <?php else : ?>
+                    <li class="nav-item">
+                        <span class="nav-link" style="color: white;">wHELLcome <?= $_SESSION["user"]["nick"] ?></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary" href="disconnect.php" style="color: white;">disconnect</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </div>
+    </nav>
+</header>
 
-<div class="container col-xl-6 col-sm-10">
 
-     
-            <?php if(!isset($_SESSION["user"])): ?>
-              <li><a href="login.php">login</a></li>     
-             <li><a href="register.php">register</a></li>  
-              <?php else: ?>
-            <li>Bonjour <?= $_SESSION["user"]["nick"]?></li>
-               <li><a href="disconnect.php">disconnect</a></li>  
-           <?php endif; ?>
-
+<div class="container col-xl-6 col-sm-10 bg-secondary text-white mt-4 p-4 rounded-3 mb-5">
 
     <h1>Login</h1>
-    <form action="" method="post">  
+    <form action="" method="post">
         <div>
             <label for="email">Email</label>
             <input type="email" name="email" id="email">
@@ -116,9 +130,8 @@ if(!empty($_POST)){
             <input type="password" name="pass" id="pass">
         </div>
         <button type="submit">Login now</button>
-    </form>    
+    </form>
 </div>
 
 
 <?php
-

@@ -2,9 +2,9 @@
 session_start();
 
 
-if(isset($_SESSION["user"])){
-    header("Location: index.php");  
-    exit; 
+if (isset($_SESSION["user"])) {
+    header("Location: index.php");
+    exit;
 };
 
 //checking if form is sent
@@ -51,7 +51,7 @@ if (!empty($_POST)) {
 
         //user and password ok
         //connecting user 
-      
+
 
 
         //inject user info in $_SESSION
@@ -90,14 +90,40 @@ if (!empty($_POST)) {
     <!-- Inclure Boostrap ICONS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css" rel="stylesheet">
 
-    
+
 
 </head>
 
+<header>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid d-flex justify-content-center">
+            <a class="navbar-brand" href="#">Super BULBMAN</a>
+        </div>
+        <div class="container-fluid">
+            <ul class="nav justify-content-center">
+                <?php if (!isset($_SESSION["user"])) : ?>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary" href="login.php">login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary" href="register.php">register</a>
+                    </li>
+                <?php else : ?>
+                    <li class="nav-item">
+                        <span class="nav-link" style="color: white;">wHELLcome <?= $_SESSION["user"]["nick"] ?></span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary" href="disconnect.php" style="color: white;">disconnect</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </div>
+    </nav>
+</header>
 
-<div class="container col-xl-6 col-sm-10">
+<div class="container col-xl-6 col-sm-10 bg-secondary text-white mt-4 p-4 rounded-3 mb-5">
     <h1>Register</h1>
-    <form action="" method="post">  
+    <form action="" method="post">
         <div>
             <label for="nick">nickname</label>
             <input type="text" name="nickname" id="nick">
@@ -111,7 +137,7 @@ if (!empty($_POST)) {
             <input type="password" name="pass" id="pass">
         </div>
         <button type="submit">Register now</button>
-    </form>    
+    </form>
 </div>
 
 
@@ -119,4 +145,3 @@ if (!empty($_POST)) {
 
 
 <?php
-

@@ -146,8 +146,74 @@ if ($_POST) {
 
 
 
+
+    <!-- HISTORY -->
+
+    <div class="container col-xl-6 col-sm-10">
+        <h2>History</h2>
+        <div class="row mt-4 mb-4">
+            <div class="col">id</div>
+            <div class="col">date</div>
+            <div class="col">floor</div>
+            <div class="col">position</div>
+            <div class="col">price</div>
+            <div class="col">edit</div>
+        </div>
+
+        <?php foreach ($articles as $row) : ?>
+            <div class="row mb-2">
+                <div class="col"><?= $row['id'] ?></div>
+                <div class="col"><?= $row['date'] ?></div>
+                <div class="col"><?= $row['floor'] ?>F</div>
+                <div class="col"><?= $row['position'] ?></div>
+                <div class="col">$<?= $row['price'] ?></div>
+                <div class="col">
+                    <div class="d-flex">
+                        <a href="edit.php?id=<?= $row["id"] ?>" class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></a>
+                        <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>">
+                            <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- END HISTORY -->
+
+    <!-- PAGINATION -->
+
+    <div class="container d-flex justify-content-center mt-5">
+        <nav>
+            <ul class="pagination">
+                <!-- Lien vers la page précédente (désactivé si on se trouve sur la 1ère page) -->
+                <li class="page-item <?= ($currentPage == 1) ? "disabled" : "" ?>">
+                    <a href="./?page=<?= $currentPage - 1 ?>" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                </li>
+                <?php for ($page = 1; $page <= $pages; $page++) : ?>
+                    <!-- Lien vers chacune des pages (activé si on se trouve sur la page correspondante) -->
+                    <li class="page-item <?= ($currentPage == $page) ? "active" : "" ?>">
+                        <a href="./?page=<?= $page ?>" class="page-link"><?= $page ?></a>
+                    </li>
+                <?php endfor ?>
+                <!-- Lien vers la page suivante (désactivé si on se trouve sur la dernière page) -->
+                <li class="page-item <?= ($currentPage == $pages) ? "disabled" : "" ?>">
+                    <a href="./?page=<?= $currentPage + 1 ?>" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- END PAGINATION -->
+
     <!-- ADD -->
-    <div class="container col-xl-6 col-sm-10 bg-secondary text-white mt-4 p-4 rounded-3">
+    <div class="container col-xl-6 col-sm-10 bg-secondary text-white mt-4 p-4 rounded-3 mb-5">
         <h2>Add a bulb ?</h2>
         <form method="post">
             <div class="row mb-3">
@@ -211,71 +277,6 @@ if ($_POST) {
     </div>
 
 
-    <!-- PAGINATION -->
-
-    <div class="container d-flex justify-content-center mt-5">
-        <nav>
-            <ul class="pagination">
-                <!-- Lien vers la page précédente (désactivé si on se trouve sur la 1ère page) -->
-                <li class="page-item <?= ($currentPage == 1) ? "disabled" : "" ?>">
-                    <a href="./?page=<?= $currentPage - 1 ?>" class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                </li>
-                <?php for ($page = 1; $page <= $pages; $page++) : ?>
-                    <!-- Lien vers chacune des pages (activé si on se trouve sur la page correspondante) -->
-                    <li class="page-item <?= ($currentPage == $page) ? "active" : "" ?>">
-                        <a href="./?page=<?= $page ?>" class="page-link"><?= $page ?></a>
-                    </li>
-                <?php endfor ?>
-                <!-- Lien vers la page suivante (désactivé si on se trouve sur la dernière page) -->
-                <li class="page-item <?= ($currentPage == $pages) ? "disabled" : "" ?>">
-                    <a href="./?page=<?= $currentPage + 1 ?>" class="page-link" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <!-- END PAGINATION -->
-
-
-    <!-- HISTORY -->
-
-    <div class="container col-xl-6 col-sm-10">
-        <h2>History</h2>
-        <div class="row mt-4 mb-4">
-            <div class="col">id</div>
-            <div class="col">date</div>
-            <div class="col">floor</div>
-            <div class="col">position</div>
-            <div class="col">price</div>
-            <div class="col">edit</div>
-        </div>
-
-        <?php foreach ($articles as $row) : ?>
-            <div class="row mb-2">
-                <div class="col"><?= $row['id'] ?></div>
-                <div class="col"><?= $row['date'] ?></div>
-                <div class="col"><?= $row['floor'] ?>F</div>
-                <div class="col"><?= $row['position'] ?></div>
-                <div class="col">$<?= $row['price'] ?></div>
-                <div class="col">
-                    <div class="d-flex">
-                        <a href="edit.php?id=<?= $row["id"] ?>" class="btn btn-primary btn-sm me-2"><i class="bi bi-pencil"></i></a>
-                        <a href="delete.php?id=<?= $row["id"] ?>" data-toggle="modal" data-target="#confirmationModal" class="delete-link" data-bulb-id="<?= $row["id"] ?>">
-                            <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-
-    <!-- END HISTORY -->
 
 
 
